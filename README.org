@@ -1,0 +1,61 @@
+* ws-access-token
+
+project is using https://github.com/utdemir/hs-nix-template
+
+* Generate JWT
+
+http://hackage.haskell.org/package/jwt-0.10.0/docs/Web-JWT.html
+
+we need to ~readRsaSecret~ ~readRsaSecret <$> BS.readFile "path"~
+
+#+begin_src haskell
+
+import Web.JWT
+
+       let
+     cs = mempty { -- mempty returns a default JWTClaimsSet
+        iss = stringOrURI Foo
+      , unregisteredClaims = Map.fromList [("http://example.com/is_root", (Bool True))]
+     }
+
+     key = hmacSecret "secret-key"
+ in encodeSigned key mempty cs
+
+#+end_src
+
+
+* How to send request to Haskell
+
+- req https://hackage.haskell.org/package/req-3.7.0/docs/Network-HTTP-Req.html#t:HttpBody
+
+how parse the body
+
+#+begin_src haskell
+send :: T.Text -> IO ()
+send assertion = runReq defaultHttpConfig $ do
+
+  let payload = "grant_type" =: ("urn:ietf:params:oauth:grant-type:jwt-bearer" :: T.Text) <> "assertion" =: assertion
+
+  -- One function—full power and flexibility, automatic retrying on timeouts
+  -- and such, automatic connection sharing.
+  r <-
+    req
+      POST -- method
+      (https "wk-dev.wdesk.org" /: "iam" /: "oauth2" /: "v2.0" /: "token" ) -- safe by construction URL
+      (ReqBodyUrlEnc payload) -- use built-in options or add your own
+      lbsResponse -- specify how to interpret response
+      mempty -- query params, headers, explicit port number, etc.
+  liftIO $ (print . value . fromJust ) $ (decode (responseBody r :: LBS.ByteString) :: Maybe AccessToken)
+
+#+end_src
+
+* DONE not use ~fromJust~
+using `maybe` and fail to combine
+* DONE add support for membership
+* DONE read params from dhall file
+* TODO build exe
+* TODO fix nix hack
+https://github.com/NixOS/nixpkgs/issues/81889#issuecomment-596201723
+
+* References
+- https://lukelau.me/haskell/
