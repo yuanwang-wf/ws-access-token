@@ -49,11 +49,6 @@ send assertion = runReq defaultHttpConfig $ do
 
 #+end_src
 
-* DONE not use ~fromJust~
-using `maybe` and fail to combine
-* DONE add support for membership
-* DONE read params from dhall file
-* TODO build exe
 * TODO fix nix hack
 https://github.com/NixOS/nixpkgs/issues/81889#issuecomment-596201723
 
