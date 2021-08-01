@@ -4,7 +4,7 @@
 
 module WsAccessToken where
 
-import Control.Applicative (liftA3)
+import Control.Applicative (liftA2, liftA3)
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Aeson
   ( FromJSON (parseJSON),
@@ -27,7 +27,6 @@ import Dhall
     Vector,
     auto,
     input,
-    record,
   )
 import Network.HTTP.Req
   ( POST (POST),
@@ -44,7 +43,7 @@ import Network.HTTP.Req
     (/:),
     (=:),
   )
-import System.Environment (getArgs)
+import System.Environment (getArgs, lookupEnv)
 import Web.JWT
   ( ClaimsMap (ClaimsMap),
     JWTClaimsSet
@@ -120,9 +119,6 @@ constructClaimsSet config posix =
 sign :: Record -> IO T.Text
 sign config = liftA3 encodeSigned (getSigner config) (return mempty) (constructClaimsSet config <$> getPOSIXTime)
 
-liftA2 :: (Record -> POSIXTime -> JWTClaimsSet) -> m0 Record -> IO POSIXTime -> IO JWTClaimsSet
-liftA2 = error "not implemented"
-
 prepareRequest :: Text -> Url 'Https
 prepareRequest aud = foldl (/:) (https host) tails
   where
@@ -163,6 +159,19 @@ getRecord conf arg = case arg of
 getAccessToken :: IO ()
 getAccessToken = do
   args <- getArgs
-  config <- input auto "./config.dhall"
-  token <- getToken (getRecord config (head args))
+  record <- loadRecord (head args)
+  token <- getToken record
   (putStrLn . value) token
+
+getConfigDir :: IO String
+getConfigDir = liftA2 (++) base (pure "ws-access-token/")
+  where
+    base =
+      fmap
+        (maybe "$HOME/." (++ "/"))
+        (lookupEnv "XDG_CONFIG_HOME")
+
+loadRecord :: String -> IO Record
+loadRecord name = do
+  file <- fmap (++ (name ++ ".dhall")) getConfigDir
+  input auto (T.pack file)
