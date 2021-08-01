@@ -72,11 +72,6 @@ data Record = Record
 
 instance FromDhall Record
 
-data Config = Config {aws :: Record, wk :: Record}
-  deriving (Generic, Show)
-
-instance FromDhall Config
-
 data AccessToken = AccessToken
   { value :: String
   }
