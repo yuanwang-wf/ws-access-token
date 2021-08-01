@@ -54,6 +54,8 @@ import Web.JWT
         unregisteredClaims
       ),
     Signer (RSAPrivateKey),
+    claims,
+    decode,
     encodeSigned,
     numericDate,
     readRsaSecret,
@@ -165,3 +167,6 @@ loadRecord :: String -> IO Record
 loadRecord name = do
   file <- fmap (++ (name ++ ".dhall")) getConfigDir
   input auto (T.pack file)
+
+debugToken :: T.Text -> Maybe JWTClaimsSet
+debugToken = fmap claims . decode
