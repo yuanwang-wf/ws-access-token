@@ -146,11 +146,6 @@ getToken record = do
   assertion <- sign record
   send assertion record
 
-getRecord :: Config -> String -> Record
-getRecord conf arg = case arg of
-  "aws" -> aws conf
-  _ -> wk conf
-
 getAccessToken :: IO ()
 getAccessToken = do
   args <- getArgs
