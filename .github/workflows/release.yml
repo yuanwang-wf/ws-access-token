@@ -52,9 +52,14 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: ws-access-token-macos
+          path: dist
+      - name: Test
+        run: |
+          ls
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          fail_on_unmatched_files: true
           files: |
-            ws-access-token-macos
+            ./dist/ws-access-token-macos
