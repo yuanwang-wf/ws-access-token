@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-on-linux:
-    name: Build
+    name: Build on ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -19,14 +19,13 @@ jobs:
       - name: Nix build
         run: |
           nix build
-          ls
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
           name: ws-access-token
           path: ./result/bin/ws-access-token
   build-on-mac:
-    name: Build
+    name: Build on MacOS
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -38,7 +37,6 @@ jobs:
       - name: Nix build
         run: |
           nix build
-          ls
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
