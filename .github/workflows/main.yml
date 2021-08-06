@@ -44,3 +44,20 @@ jobs:
         with:
           name: ws-access-token-macos
           path: ./result/bin/ws-access-token
+
+  release:
+    name: release
+    needs: build-on-mac
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: ws-access-token-macos
+          path: ws-access-token-macos
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ws-access-token-macos
