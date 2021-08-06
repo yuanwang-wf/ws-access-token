@@ -19,8 +19,9 @@ jobs:
       - name: Nix build
         run: |
           nix build
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: ws-access-token
-          path: ./result/bin/ws-access
+          ls
+      # - name: Archive Production Artifact
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: ws-access-token
+      #     path: ./result/bin/ws-access
