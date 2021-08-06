@@ -5,6 +5,7 @@
 module WsAccessToken where
 
 import Control.Applicative (liftA2, liftA3)
+import Control.Monad ((<=<))
 import Control.Monad.IO.Class (MonadIO (liftIO))
 import Data.Aeson
   ( FromJSON (parseJSON),
@@ -92,16 +93,11 @@ getSigner config = do
     (return . RSAPrivateKey)
     (readRsaSecret content)
 
-constructSub :: Record -> Maybe StringOrURI
-constructSub r = case membershipId r of
-  Just m -> stringOrURI m
-  _ -> Nothing
-
 constructClaimsSet :: Record -> POSIXTime -> JWTClaimsSet
 constructClaimsSet config posix =
   mempty -- mempty returns a default JWTClaimsSet
     { iss = stringOrURI (issuer config),
-      sub = constructSub config,
+      sub = (stringOrURI <=< membershipId) config,
       exp = numericDate posix,
       aud =
         Left
