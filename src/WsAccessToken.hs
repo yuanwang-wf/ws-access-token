@@ -54,6 +54,7 @@ import Web.JWT
         unregisteredClaims
       ),
     Signer (RSAPrivateKey),
+    StringOrURI,
     claims,
     decode,
     encodeSigned,
@@ -67,7 +68,7 @@ data Record = Record
   { keyPath :: Text,
     issuer :: Text,
     scopes :: Vector Text,
-    membershipId :: Text,
+    membershipId :: Maybe Text,
     audience :: Text
   }
   deriving (Generic, Show)
@@ -91,11 +92,16 @@ getSigner config = do
     (return . RSAPrivateKey)
     (readRsaSecret content)
 
+constructSub :: Record -> Maybe StringOrURI
+constructSub r = case membershipId r of
+  Just m -> stringOrURI m
+  _ -> Nothing
+
 constructClaimsSet :: Record -> POSIXTime -> JWTClaimsSet
 constructClaimsSet config posix =
   mempty -- mempty returns a default JWTClaimsSet
     { iss = stringOrURI (issuer config),
-      sub = stringOrURI (membershipId config),
+      sub = constructSub config,
       exp = numericDate posix,
       aud =
         Left
