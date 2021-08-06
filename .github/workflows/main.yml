@@ -23,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ws-access-token
-          path: result/bin/ws-access
+          path: ./result/bin/ws-access
