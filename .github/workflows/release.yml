@@ -37,4 +37,4 @@ jobs:
         with:
           fail_on_unmatched_files: true
           files: |
-            ws-access-token-macos
+            ws-access-token
