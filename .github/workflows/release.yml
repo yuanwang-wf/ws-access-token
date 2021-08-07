@@ -19,22 +19,13 @@ jobs:
       - name: Nix build
         run: |
           nix build
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: ws-access-token-macos
-          path: ./result/bin/ws-access-token
-      - name: Download Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: ws-access-token-macos
       - name: Test
         run: |
-          ls
+          zip --junk-path ws-access-token-macos.zip ./result/bin/ws-acess-token
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           fail_on_unmatched_files: true
           files: |
-            ws-access-token
+            ws-access-token-macos.zip
