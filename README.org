@@ -4,10 +4,15 @@
 
 [[https://builtwithnix.org/badge.svg]]
 
-a simple CLI  to fetch access token
+a simple CLI to fetch access token base on PEM file
 
 
 ** Install
+*** with nix
 TODO
+*** Pre-built binaries
+There are pre-built binaries for macOS
 ** Usage
 TODO
+
+~ws-access-token example | pbcopy~
