@@ -24,7 +24,7 @@ jobs:
   #       with:
   #         name: ws-access-token
   #         path: ./result/bin/ws-access-token
-  build-on-mac:
+  build:
     name: Build on MacOS
     runs-on: macos-latest
     steps:
@@ -46,13 +46,13 @@ jobs:
   release:
     name: release
     needs: |
-      build-on-mac
+      build
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
-          name: ws-access-token
+          name: ws-access-token-macos
       - name: Test
         run: |
           ls
