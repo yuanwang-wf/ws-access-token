@@ -6,8 +6,8 @@ on:
       - "v*.*.*"
 
 jobs:
-  build:
-    name: build
+  release:
+    name: release
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -24,13 +24,6 @@ jobs:
         with:
           name: ws-access-token-macos
           path: ./result/bin/ws-access-token
-
-  release:
-    name: release
-    needs: |
-      build
-    runs-on: ubuntu-latest
-    steps:
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
